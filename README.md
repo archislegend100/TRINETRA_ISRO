@@ -1,55 +1,123 @@
 <div align="center">
-<img src="https://i.ibb.co/n8kcfR4T/Screenshot-2025-12-05-085957.png" alt="Screenshot-2025-12-05-085957" border="0">
+<img src="https://i.ibb.co/n8kcfR4T/Screenshot-2025-12-05-085957.png" alt="TRINETRA banner" border="0">
+
+# TRINETRA
+
+**AI-Powered Geospatial Natural Language Interpretation (GeoNLI) for Remote Sensing Imagery**
+
+[![Live Demo](https://img.shields.io/badge/Live%20Demo-TRINETRA-2ea44f?style=flat-square)](https://trinetra-silk.vercel.app/)
+[![Next.js](https://img.shields.io/badge/Next.js-15-black?style=flat-square&logo=next.js)](https://nextjs.org/)
+[![Python](https://img.shields.io/badge/Python-3.12-blue?style=flat-square&logo=python)](https://www.python.org/)
+[![License](https://img.shields.io/badge/License-Mixed%20OSS-orange?style=flat-square)](#license--acknowledgments)
+
+</div>
 
 ---
 
-**TRINETRA**
+## Overview
 
-TRINETRA is an AI-powered conversational platform designed for Geospatial Natural Language Interpretation (GeoNLI) across remote sensing imagery of multiple modalities, including optical, False Color Composite (FCC), and Synthetic Aperture Radar (SAR). It supports three core tasks captioning, grounding, and visual question answering to deliver clear, context-aware insights directly tied to geospatial data. Alongside these core capabilities, TRINETRA offers AgriChat for agriculture specific queries and GEO Compare for temporal comparison, allowing users to analyze and interpret changes between two images of the same location over time.
+**TRINETRA** is an AI-powered conversational platform built for **Geospatial Natural Language Interpretation (GeoNLI)** across remote sensing imagery of multiple modalities — including **Optical**, **False Color Composite (FCC)**, and **Synthetic Aperture Radar (SAR)**.
 
-</div>
+The platform delivers clear, context-aware insights directly tied to geospatial data through three core tasks:
+
+- **Captioning** — Generate detailed, descriptive captions for satellite imagery.
+- **Grounding** — Locate and outline objects with oriented bounding boxes (OBB).
+- **Visual Question Answering (VQA)** — Answer binary, numeric, and semantic questions about an image.
+
+In addition to these core capabilities, TRINETRA offers:
+
+- **AgriChat** — A dedicated module for agriculture-specific queries.
+- **GEO Compare** — Temporal comparison that lets users analyze changes between two images of the same location over time.
+
+---
+
+## Key Features
+
+| Capability | Description |
+| --- | --- |
+| 🛰️ **Multi-Modal Support** | Works across Optical, FCC, and SAR imagery. |
+| 💬 **Conversational Interface** | Real-time streaming chat for natural geospatial analysis. |
+| 🖼️ **Captioning & VQA** | Instant captioning plus grounded visual question answering. |
+| 🎯 **Object Grounding** | Oriented bounding boxes with SAM-based mask refinement. |
+| 🌾 **AgriChat** | Specialized agriculture analysis with rich, formatted output. |
+| 🔀 **GEO Compare** | Side-by-side temporal comparison of two locations or timestamps. |
+
+---
+
+## Architecture
+
+TRINETRA uses a decoupled architecture with a modern web frontend and a two-tier inference backend.
+
+```
+┌──────────────┐      ┌───────────────────┐      ┌──────────────────┐
+│   TRINETRA   │────▶ │  Flask Backend    │────▶ │   Modal Server   │
+│  (Next.js)   │      │  (orchestration)  │      │  (GPU inference) │
+│              │ ◀────│  YOLO · Supabase  │ ◀────│  VLMs · SAM · LLM│
+└──────────────┘      └───────────────────┘      └──────────────────┘
+```
+
+- **Frontend (`TRINETRA/`)** — Next.js 15 application providing the chat UI, map selection, and comparison views.
+- **Backend (`backend/`)** — A Flask API server for request orchestration, image classification, and pre/post-processing, paired with a Modal-hosted FastAPI server running the Vision-Language Models on GPU.
 
 ---
 
 ## Repository Structure
 
 ```txt
-├── TRINETRA
-├── backend
-├── deployment_script.sh
+.
+├── TRINETRA/              # Next.js frontend application
+├── backend/              # Flask + Modal inference backend
+├── deployment_script.sh  # End-to-end deployment helper
+├── user_guide.pdf        # Detailed user guide
 └── README.md
 ```
+
+Each of the `TRINETRA/` and `backend/` directories contains its own detailed `README.md` with component-specific setup instructions.
+
 ---
 
-## Pre-requisite
-1. Ensure the system has Node.js v22.18.0 installed.
-2. Ensure the system has Python v3.12.4 installed.
-   
+## Prerequisites
+
+- **Node.js** `v22.18.0` — for the frontend.
+- **Python** `v3.12.4` — for the backend.
+- A **Modal** account (GPU inference), **Supabase** project (image storage), and **MapTiler** API key (map search).
+
+---
+
 ## Quick Start
-**Steps**
 
-1. The repo has 2 folders, 'TRINETRA' and 'backend'.
-2. Both have their individual README.md with instructions well explained.
-3. Follow the instructions for both to get your app ready.
+The repository is split into two main components — `TRINETRA` (frontend) and `backend`. Each has its own `README.md` with detailed, step-by-step instructions. Follow both to get the full application running.
 
-**Steps to run deployment script**
-Run the command:
+### Automated Deployment
+
+A helper script is provided to deploy the backend (Modal + Flask) and frontend in sequence:
+
 ```bash
 ./deployment_script.sh
 ```
+
+### Manual Setup
+
+1. **Backend** — Deploy the Modal GPU server, then start the Flask API. See [`backend/README.md`](backend/README.md).
+2. **Frontend** — Install dependencies and run the dev server. See [`TRINETRA/README.md`](TRINETRA/README.md).
+
+For a complete walkthrough of the platform's features, refer to [`user_guide.pdf`](user_guide.pdf).
+
 ---
 
 ## License & Acknowledgments
 
 This project integrates multiple open-source models and libraries. Each component retains its original license:
 
-- **Qwen3** -  Licensed under Apache 2.0, allowing for free commercial use, modification, and distribution.
-- **LLaMA 3.1** - Governed by the LLaMA 3.1 Community License, which permits commercial use and redistribution subject to user cap restrictions and attribution.
-- **YOLO v11** - Released under the AGPL-3.0 license, requiring any derivative open-source software to use the same license; enterprise use requires a separate commercial license.
-- **SAM 2.1** - Both code and model weights are released under the permissive Apache 2.0 license.
-- **SAM 3** - Distributed under a custom Meta license that grants a non-exclusive, royalty-free license for use and redistribution, subject to specific attribution and compliance terms.
-- **RemoteCLIP** - Licensed under Apache 2.0, allowing for free commercial use, modification, and distribution.
+| Component | License | Notes |
+| --- | --- | --- |
+| **Qwen3** | Apache 2.0 | Free commercial use, modification, and distribution. |
+| **LLaMA 3.1** | LLaMA 3.1 Community License | Commercial use and redistribution subject to user-cap restrictions and attribution. |
+| **YOLO v11** | AGPL-3.0 | Derivative open-source software must use the same license; enterprise use requires a separate commercial license. |
+| **SAM 2.1** | Apache 2.0 | Permissive license for both code and model weights. |
+| **SAM 3** | Custom Meta License | Non-exclusive, royalty-free license subject to attribution and compliance terms. |
+| **RemoteCLIP** | Apache 2.0 | Free commercial use, modification, and distribution. |
 
-Please refer to individual documentation files for specific citations and acknowledgments.
+Please refer to the individual documentation files for specific citations and acknowledgments.
 
 ---
